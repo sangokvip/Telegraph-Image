@@ -654,20 +654,95 @@
             }
             
             copyToClipboard(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    // 简单的成功提示
-                    const btn = event.target;
-                    const originalText = btn.textContent;
-                    btn.textContent = '已复制';
-                    btn.style.background = '#333';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.style.background = '#1a1a1a';
-                    }, 1500);
-                }).catch(err => {
-                    console.error('复制失败:', err);
-                    alert('复制失败，请手动复制');
-                });
+                // 优先使用现代 Clipboard API
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.showCopySuccess();
+                    }).catch(err => {
+                        console.error('Clipboard API 失败:', err);
+                        this.fallbackCopyToClipboard(text);
+                    });
+                } else {
+                    // 降级方案：使用传统的 execCommand
+                    this.fallbackCopyToClipboard(text);
+                }
+            }
+            
+            fallbackCopyToClipboard(text) {
+                // 创建临时文本区域
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                
+                try {
+                    textArea.focus();
+                    textArea.select();
+                    
+                    // 尝试使用 execCommand
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        this.showCopySuccess();
+                    } else {
+                        this.showCopyError();
+                    }
+                } catch (err) {
+                    console.error('execCommand 复制失败:', err);
+                    this.showCopyError();
+                } finally {
+                    document.body.removeChild(textArea);
+                }
+            }
+            
+            showCopySuccess() {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '已复制';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#1a1a1a';
+                }, 1500);
+            }
+            
+            showCopyError() {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '复制失败';
+                btn.style.background = '#dc3545';
+                
+                // 显示手动复制提示
+                const resultItem = btn.closest('.result-item');
+                const urlInput = resultItem.querySelector('.result-url');
+                urlInput.select();
+                urlInput.focus();
+                
+                // 显示提示信息
+                const tooltip = document.createElement('div');
+                tooltip.textContent = '请按 Ctrl+C 手动复制';
+                tooltip.style.cssText = `
+                    position: absolute;
+                    background: #333;
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    z-index: 1000;
+                    margin-top: -40px;
+                    white-space: nowrap;
+                `;
+                btn.style.position = 'relative';
+                btn.appendChild(tooltip);
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#1a1a1a';
+                    if (tooltip.parentNode) {
+                        tooltip.remove();
+                    }
+                }, 3000);
             }
         }
         
