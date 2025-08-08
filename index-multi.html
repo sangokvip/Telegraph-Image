@@ -216,7 +216,7 @@
         
         .file-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1px;
             background: #e5e5e5;
         }
@@ -225,13 +225,19 @@
             background: #ffffff;
             padding: 16px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 12px;
             transition: background 0.2s ease;
         }
         
         .file-item:hover {
             background: #fafafa;
+        }
+        
+        .file-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .file-icon {
@@ -344,30 +350,40 @@
             background: #c82333;
         }
         
-        .progress-section {
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
+        /* 单文件进度条 */
+        .file-progress {
+            width: 100%;
+            margin-top: 8px;
         }
         
-        .progress-section.hidden {
+        .file-progress.hidden {
             display: none;
         }
         
-        .progress-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 12px;
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .progress-text {
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .progress-percent {
+            font-size: 11px;
             color: #1a1a1a;
+            font-weight: 600;
         }
         
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: #f0f0f0;
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
         }
         
@@ -375,7 +391,16 @@
             height: 100%;
             background: #1a1a1a;
             transition: width 0.3s ease;
-            border-radius: 3px;
+            border-radius: 2px;
+            width: 0%;
+        }
+        
+        .progress-fill.error {
+            background: #dc3545;
+        }
+        
+        .progress-fill.success {
+            background: #28a745;
         }
         
         .results {
@@ -557,6 +582,10 @@
             .file-size {
                 font-size: 10px;
             }
+            
+            .file-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -597,12 +626,7 @@
             <div class="file-grid" id="fileList"></div>
         </div>
         
-        <div class="progress-section hidden" id="progressSection">
-            <div class="progress-title">上传进度</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
+
         
         <div class="results hidden" id="results">
             <div class="results-header">
@@ -618,8 +642,8 @@
         class MultiFileUploader {
             constructor() {
                 this.files = [];
-                this.uploadedCount = 0;
-                this.totalCount = 0;
+                this.uploadQueue = [];
+                this.isUploading = false;
                 
                 this.initEventListeners();
             }
@@ -655,6 +679,7 @@
                     file,
                     id: Date.now() + Math.random(),
                     status: 'waiting',
+                    progress: 0,
                     url: null,
                     error: null
                 }));
@@ -663,8 +688,8 @@
                 this.renderFileList();
                 this.updateControlPanel();
                 
-                if (this.files.length > 0) {
-                    this.startUpload();
+                if (this.files.length > 0 && !this.isUploading) {
+                    this.startUploadQueue();
                 }
             }
             
@@ -709,17 +734,42 @@
                         `;
                     }
                     
+                    // 进度条显示逻辑
+                    const showProgress = fileItem.status === 'uploading' || (fileItem.status === 'error' && fileItem.progress > 0);
+                    const progressClass = fileItem.status === 'error' ? 'error' : (fileItem.status === 'success' ? 'success' : '');
+                    
                     div.innerHTML = `
-                        <div class="file-icon">${this.getFileIcon(fileItem.file.type)}</div>
-                        <div class="file-info">
-                            <div class="file-name" title="${fileItem.file.name}">${fileItem.file.name}</div>
-                            <div class="file-size">${this.formatFileSize(fileItem.file.size)}</div>
-                            ${fileItem.error ? `<div class="file-error">${fileItem.error}</div>` : ''}
+                        <div class="file-header">
+                            <div class="file-icon">${this.getFileIcon(fileItem.file.type)}</div>
+                            <div class="file-info">
+                                <div class="file-name" title="${fileItem.file.name}">${fileItem.file.name}</div>
+                                <div class="file-size">${this.formatFileSize(fileItem.file.size)}</div>
+                                ${fileItem.error ? `<div class="file-error">${fileItem.error}</div>` : ''}
+                            </div>
+                            ${actionsHtml}
                         </div>
-                        ${actionsHtml}
+                        <div class="file-progress ${showProgress ? '' : 'hidden'}">
+                            <div class="progress-info">
+                                <span class="progress-text">${this.getProgressText(fileItem.status)}</span>
+                                <span class="progress-percent">${Math.round(fileItem.progress)}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${progressClass}" style="width: ${fileItem.progress}%"></div>
+                            </div>
+                        </div>
                     `;
                     fileList.appendChild(div);
                 });
+            }
+            
+            getProgressText(status) {
+                const textMap = {
+                    waiting: '等待上传',
+                    uploading: '正在上传',
+                    success: '上传完成',
+                    error: '上传失败'
+                };
+                return textMap[status] || status;
             }
             
             updateControlPanel() {
@@ -742,12 +792,16 @@
                 if (index >= 0 && index < this.files.length) {
                     const fileItem = this.files[index];
                     fileItem.status = 'waiting';
+                    fileItem.progress = 0;
                     fileItem.error = null;
                     fileItem.url = null;
                     
                     this.renderFileList();
                     this.updateControlPanel();
-                    this.startUpload();
+                    
+                    if (!this.isUploading) {
+                        this.startUploadQueue();
+                    }
                 }
             }
             
@@ -775,13 +829,17 @@
                 
                 failedFiles.forEach(fileItem => {
                     fileItem.status = 'waiting';
+                    fileItem.progress = 0;
                     fileItem.error = null;
                     fileItem.url = null;
                 });
                 
                 this.renderFileList();
                 this.updateControlPanel();
-                this.startUpload();
+                
+                if (!this.isUploading) {
+                    this.startUploadQueue();
+                }
             }
             
             getFileIcon(type) {
@@ -809,74 +867,75 @@
                 return statusMap[status] || status;
             }
             
-            async startUpload() {
+            async startUploadQueue() {
+                if (this.isUploading) return;
+                
                 const waitingFiles = this.files.filter(f => f.status === 'waiting');
                 if (waitingFiles.length === 0) return;
                 
-                this.totalCount = waitingFiles.length;
-                this.uploadedCount = 0;
+                this.isUploading = true;
                 
-                document.getElementById('progressSection').classList.remove('hidden');
+                // 逐个上传文件
+                for (const fileItem of waitingFiles) {
+                    if (fileItem.status !== 'waiting') continue;
+                    
+                    await this.uploadSingleFile(fileItem);
+                }
                 
-                // 标记所有文件为上传中
-                waitingFiles.forEach(fileItem => {
-                    fileItem.status = 'uploading';
-                });
+                this.isUploading = false;
+                this.renderResults();
+                this.renderSummary();
+            }
+            
+            async uploadSingleFile(fileItem) {
+                fileItem.status = 'uploading';
+                fileItem.progress = 0;
                 this.renderFileList();
                 
                 try {
                     const formData = new FormData();
-                    waitingFiles.forEach(fileItem => {
-                        formData.append('file', fileItem.file);
-                    });
+                    formData.append('file', fileItem.file);
+                    
+                    // 模拟进度更新
+                    const progressInterval = setInterval(() => {
+                        if (fileItem.progress < 90) {
+                            fileItem.progress += Math.random() * 20;
+                            if (fileItem.progress > 90) fileItem.progress = 90;
+                            this.renderFileList();
+                        }
+                    }, 200);
                     
                     const response = await fetch('/upload', {
                         method: 'POST',
                         body: formData
                     });
                     
+                    clearInterval(progressInterval);
+                    
                     const result = await response.json();
                     
-                    if (result.success) {
-                        // 处理成功的文件
-                        result.results.forEach((uploadResult, index) => {
-                            if (index < waitingFiles.length) {
-                                waitingFiles[index].status = 'success';
-                                waitingFiles[index].url = location.origin + uploadResult.src;
-                            }
-                        });
-                        
-                        // 处理失败的文件
-                        if (result.errors) {
-                            result.errors.forEach(error => {
-                                const fileItem = waitingFiles.find(f => f.file.name === error.fileName);
-                                if (fileItem) {
-                                    fileItem.status = 'error';
-                                    fileItem.error = error.error;
-                                }
-                            });
-                        }
+                    if (result.success && result.results && result.results.length > 0) {
+                        fileItem.status = 'success';
+                        fileItem.progress = 100;
+                        fileItem.url = location.origin + result.results[0].src;
                     } else {
-                        // 全部失败
-                        waitingFiles.forEach(fileItem => {
-                            fileItem.status = 'error';
-                            fileItem.error = result.error || '上传失败';
-                        });
+                        fileItem.status = 'error';
+                        fileItem.progress = 100;
+                        fileItem.error = result.error || '上传失败';
                     }
                     
                 } catch (error) {
                     console.error('Upload error:', error);
-                    waitingFiles.forEach(fileItem => {
-                        fileItem.status = 'error';
-                        fileItem.error = '网络错误';
-                    });
+                    fileItem.status = 'error';
+                    fileItem.progress = 100;
+                    fileItem.error = '网络错误';
                 }
                 
                 this.renderFileList();
                 this.updateControlPanel();
-                this.renderResults();
-                this.renderSummary();
-                document.getElementById('progressSection').classList.add('hidden');
+                
+                // 添加小延迟，避免上传过快
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
             
             renderResults() {
