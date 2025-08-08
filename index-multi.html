@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegraph-Image | 多文件上传</title>
+    <script src="https://js.sentry-cdn.com/219f636ac7bde5edab2c3e16885cb535.min.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 16px;
+        }
+        
+        .upload-text {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: #f9f9f9;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-right: 12px;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .file-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-uploading {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .results {
+            margin-top: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .result-url {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+        
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #218838;
+        }
+        
+        .summary {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Telegraph-Image 多文件上传</h1>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">拖拽文件到这里或点击选择文件</div>
+            <div class="upload-text">支持图片、视频、音频等多种格式</div>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+            <input type="file" id="fileInput" class="file-input" multiple accept="image/*,video/*,audio/*">
+        </div>
+        
+        <div class="file-list" id="fileList"></div>
+        
+        <div class="progress-bar hidden" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="results hidden" id="results"></div>
+        
+        <div class="summary hidden" id="summary"></div>
+    </div>
+
+    <script>
+        class MultiFileUploader {
+            constructor() {
+                this.files = [];
+                this.uploadedCount = 0;
+                this.totalCount = 0;
+                
+                this.initEventListeners();
+            }
+            
+            initEventListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+                
+                // 文件选择
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFiles(e.target.files);
+                });
+                
+                // 拖拽上传
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    this.handleFiles(e.dataTransfer.files);
+                });
+            }
+            
+            handleFiles(fileList) {
+                const newFiles = Array.from(fileList).map(file => ({
+                    file,
+                    id: Date.now() + Math.random(),
+                    status: 'waiting',
+                    url: null,
+                    error: null
+                }));
+                
+                this.files = [...this.files, ...newFiles];
+                this.renderFileList();
+                
+                if (this.files.length > 0) {
+                    this.startUpload();
+                }
+            }
+            
+            renderFileList() {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                
+                this.files.forEach(fileItem => {
+                    const div = document.createElement('div');
+                    div.className = 'file-item';
+                    div.innerHTML = `
+                        <div class="file-info">
+                            <div class="file-name">${fileItem.file.name}</div>
+                            <div class="file-size">${this.formatFileSize(fileItem.file.size)}</div>
+                        </div>
+                        <div class="file-status status-${fileItem.status}">
+                            ${this.getStatusText(fileItem.status)}
+                        </div>
+                    `;
+                    fileList.appendChild(div);
+                });
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            getStatusText(status) {
+                const statusMap = {
+                    waiting: '等待上传',
+                    uploading: '上传中...',
+                    success: '上传成功',
+                    error: '上传失败'
+                };
+                return statusMap[status] || status;
+            }
+            
+            async startUpload() {
+                const waitingFiles = this.files.filter(f => f.status === 'waiting');
+                if (waitingFiles.length === 0) return;
+                
+                this.totalCount = waitingFiles.length;
+                this.uploadedCount = 0;
+                
+                document.getElementById('progressBar').classList.remove('hidden');
+                
+                // 标记所有文件为上传中
+                waitingFiles.forEach(fileItem => {
+                    fileItem.status = 'uploading';
+                });
+                this.renderFileList();
+                
+                try {
+                    const formData = new FormData();
+                    waitingFiles.forEach(fileItem => {
+                        formData.append('file', fileItem.file);
+                    });
+                    
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // 处理成功的文件
+                        result.results.forEach((uploadResult, index) => {
+                            if (index < waitingFiles.length) {
+                                waitingFiles[index].status = 'success';
+                                waitingFiles[index].url = location.origin + uploadResult.src;
+                            }
+                        });
+                        
+                        // 处理失败的文件
+                        if (result.errors) {
+                            result.errors.forEach(error => {
+                                const fileItem = waitingFiles.find(f => f.file.name === error.fileName);
+                                if (fileItem) {
+                                    fileItem.status = 'error';
+                                    fileItem.error = error.error;
+                                }
+                            });
+                        }
+                    } else {
+                        // 全部失败
+                        waitingFiles.forEach(fileItem => {
+                            fileItem.status = 'error';
+                            fileItem.error = result.error || '上传失败';
+                        });
+                    }
+                    
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    waitingFiles.forEach(fileItem => {
+                        fileItem.status = 'error';
+                        fileItem.error = '网络错误';
+                    });
+                }
+                
+                this.renderFileList();
+                this.renderResults();
+                this.renderSummary();
+                document.getElementById('progressBar').classList.add('hidden');
+            }
+            
+            renderResults() {
+                const results = document.getElementById('results');
+                const successFiles = this.files.filter(f => f.status === 'success' && f.url);
+                
+                if (successFiles.length === 0) {
+                    results.classList.add('hidden');
+                    return;
+                }
+                
+                results.classList.remove('hidden');
+                results.innerHTML = '<h3>上传成功的文件链接：</h3>';
+                
+                successFiles.forEach(fileItem => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `
+                        <input type="text" class="result-url" value="${fileItem.url}" readonly>
+                        <button class="copy-btn" onclick="this.copyToClipboard('${fileItem.url}')">复制</button>
+                    `;
+                    results.appendChild(div);
+                });
+            }
+            
+            renderSummary() {
+                const summary = document.getElementById('summary');
+                const successCount = this.files.filter(f => f.status === 'success').length;
+                const errorCount = this.files.filter(f => f.status === 'error').length;
+                const totalCount = this.files.length;
+                
+                summary.classList.remove('hidden');
+                summary.innerHTML = `
+                    <strong>上传完成</strong><br>
+                    总文件数: ${totalCount} | 成功: ${successCount} | 失败: ${errorCount}
+                `;
+            }
+            
+            copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('链接已复制到剪贴板');
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                });
+            }
+        }
+        
+        // 初始化上传器
+        const uploader = new MultiFileUploader();
+        
+        // 全局复制函数
+        window.copyToClipboard = (text) => uploader.copyToClipboard(text);
+    </script>
+</body>
+</html>
