@@ -23,7 +23,7 @@
         .header {
             background: #ffffff;
             border-bottom: 1px solid #e5e5e5;
-            padding: 24px 0;
+            padding: 20px 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -46,8 +46,8 @@
         }
         
         .main {
-            max-width: 800px;
-            margin: 48px auto;
+            max-width: 1000px;
+            margin: 32px auto;
             padding: 0 24px;
         }
         
@@ -55,9 +55,9 @@
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 12px;
-            padding: 48px;
+            padding: 32px;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             transition: all 0.2s ease;
         }
         
@@ -66,22 +66,22 @@
         }
         
         .upload-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             color: #1a1a1a;
         }
         
         .upload-subtitle {
             font-size: 16px;
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
         
         .upload-area {
             border: 2px dashed #d1d1d1;
             border-radius: 8px;
-            padding: 64px 32px;
+            padding: 48px 32px;
             transition: all 0.2s ease;
             cursor: pointer;
             background: #fafafa;
@@ -94,29 +94,29 @@
         }
         
         .upload-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 24px;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
             background: #1a1a1a;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             color: white;
         }
         
         .upload-text {
             font-size: 18px;
             color: #1a1a1a;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
         }
         
         .upload-hint {
             font-size: 14px;
             color: #666;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
         
         .file-input {
@@ -127,7 +127,7 @@
             background: #1a1a1a;
             color: white;
             border: none;
-            padding: 16px 32px;
+            padding: 14px 28px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
@@ -140,11 +140,53 @@
             transform: translateY(-1px);
         }
         
+        /* 控制面板 */
+        .control-panel {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .control-panel.show {
+            display: flex;
+        }
+        
+        .control-info {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .retry-all-btn {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .retry-all-btn:hover {
+            background: #333;
+        }
+        
+        .retry-all-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
         .file-list {
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             overflow: hidden;
         }
         
@@ -153,27 +195,39 @@
         }
         
         .file-list-header {
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid #e5e5e5;
             background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .file-list-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #1a1a1a;
         }
         
-        .file-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 24px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s ease;
+        .file-count {
+            font-size: 14px;
+            color: #666;
         }
         
-        .file-item:last-child {
-            border-bottom: none;
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1px;
+            background: #e5e5e5;
+        }
+        
+        .file-item {
+            background: #ffffff;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s ease;
         }
         
         .file-item:hover {
@@ -181,40 +235,51 @@
         }
         
         .file-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: #f0f0f0;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 16px;
-            font-size: 16px;
+            font-size: 14px;
+            flex-shrink: 0;
         }
         
         .file-info {
             flex: 1;
+            min-width: 0;
         }
         
         .file-name {
             font-weight: 500;
             color: #1a1a1a;
-            margin-bottom: 4px;
-            font-size: 14px;
+            margin-bottom: 2px;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .file-size {
             color: #666;
-            font-size: 12px;
+            font-size: 11px;
+        }
+        
+        .file-error {
+            color: #dc3545;
+            font-size: 11px;
+            margin-top: 2px;
         }
         
         .file-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         
         .status-waiting {
@@ -228,21 +293,63 @@
         }
         
         .status-success {
-            background: #1a1a1a;
+            background: #28a745;
             color: white;
         }
         
         .status-error {
-            background: #ff4444;
+            background: #dc3545;
             color: white;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .action-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .action-btn.retry {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        
+        .action-btn.retry:hover {
+            background: #333;
+        }
+        
+        .action-btn.remove {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .action-btn.remove:hover {
+            background: #c82333;
         }
         
         .progress-section {
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         
         .progress-section.hidden {
@@ -250,17 +357,17 @@
         }
         
         .progress-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: #1a1a1a;
         }
         
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #f0f0f0;
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
         }
         
@@ -268,7 +375,7 @@
             height: 100%;
             background: #1a1a1a;
             transition: width 0.3s ease;
-            border-radius: 4px;
+            border-radius: 3px;
         }
         
         .results {
@@ -283,13 +390,13 @@
         }
         
         .results-header {
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid #e5e5e5;
             background: #fafafa;
         }
         
         .results-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #1a1a1a;
         }
@@ -297,7 +404,7 @@
         .result-item {
             display: flex;
             align-items: center;
-            padding: 16px 24px;
+            padding: 12px 20px;
             border-bottom: 1px solid #f0f0f0;
         }
         
@@ -307,11 +414,11 @@
         
         .result-url {
             flex: 1;
-            padding: 12px 16px;
+            padding: 8px 12px;
             border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            margin-right: 12px;
-            font-size: 14px;
+            border-radius: 6px;
+            margin-right: 10px;
+            font-size: 12px;
             font-family: 'Monaco', 'Menlo', monospace;
             background: #fafafa;
             color: #1a1a1a;
@@ -321,26 +428,25 @@
             background: #1a1a1a;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             transition: all 0.2s ease;
         }
         
         .copy-btn:hover {
             background: #333;
-            transform: translateY(-1px);
         }
         
         .summary {
             background: #1a1a1a;
             color: white;
-            padding: 24px;
+            padding: 20px;
             border-radius: 12px;
             text-align: center;
-            margin-top: 32px;
+            margin-top: 24px;
         }
         
         .summary.hidden {
@@ -348,9 +454,9 @@
         }
         
         .summary-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .summary-stats {
@@ -377,151 +483,51 @@
             }
             
             .upload-title {
-                font-size: 24px;
+                font-size: 22px;
             }
             
-            .upload-subtitle {
-                font-size: 14px;
-            }
-            
-            /* 优化文件列表布局 - 更紧凑的设计 */
-            .file-list-header {
-                padding: 16px;
-            }
-            
-            .file-list-title {
-                font-size: 16px;
+            .file-grid {
+                grid-template-columns: 1fr;
             }
             
             .file-item {
+                padding: 12px;
+            }
+            
+            .control-panel {
                 padding: 12px 16px;
-                display: grid;
-                grid-template-columns: auto 1fr auto;
-                grid-template-areas: 
-                    "icon info status"
-                    "icon info status";
+                flex-direction: column;
                 gap: 12px;
-                align-items: center;
+                align-items: stretch;
             }
             
-            .file-icon {
-                grid-area: icon;
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-                margin-right: 0;
-            }
-            
-            .file-info {
-                grid-area: info;
-                min-width: 0; /* 允许文本截断 */
-            }
-            
-            .file-name {
-                font-size: 13px;
-                margin-bottom: 2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-            }
-            
-            .file-size {
-                font-size: 11px;
-            }
-            
-            .file-status {
-                grid-area: status;
-                padding: 4px 8px;
-                font-size: 10px;
-                border-radius: 12px;
-                white-space: nowrap;
-            }
-            
-            /* 优化结果列表布局 */
-            .results-header {
-                padding: 16px;
-            }
-            
-            .results-title {
-                font-size: 16px;
+            .retry-all-btn {
+                width: 100%;
             }
             
             .result-item {
-                padding: 12px 16px;
-                display: block;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
             }
             
             .result-url {
-                width: 100%;
                 margin-right: 0;
-                margin-bottom: 8px;
-                padding: 10px 12px;
-                font-size: 12px;
-                box-sizing: border-box;
-            }
-            
-            .copy-btn {
-                width: 100%;
-                padding: 10px;
-                font-size: 13px;
-            }
-            
-            /* 优化进度条区域 */
-            .progress-section {
-                padding: 16px;
-                margin-bottom: 24px;
-            }
-            
-            .progress-title {
-                font-size: 14px;
-                margin-bottom: 12px;
-            }
-            
-            /* 优化总结区域 */
-            .summary {
-                padding: 16px;
-                margin-top: 24px;
-            }
-            
-            .summary-title {
-                font-size: 16px;
-                margin-bottom: 8px;
-            }
-            
-            .summary-stats {
-                font-size: 13px;
-            }
-            
-            /* 减少各区域间距 */
-            .main {
-                margin: 24px auto;
-            }
-            
-            .upload-section {
-                margin-bottom: 24px;
-            }
-            
-            .file-list,
-            .progress-section,
-            .results {
-                margin-bottom: 24px;
             }
         }
         
-        /* 针对更小屏幕的优化 */
         @media (max-width: 480px) {
-            .header-content,
             .main {
                 padding: 0 12px;
+                margin: 20px auto;
             }
             
             .upload-section {
-                padding: 20px 16px;
+                padding: 20px 12px;
             }
             
             .upload-area {
-                padding: 24px 16px;
+                padding: 24px 12px;
             }
             
             .upload-title {
@@ -531,33 +537,16 @@
             .upload-icon {
                 width: 48px;
                 height: 48px;
-                font-size: 20px;
-                margin-bottom: 16px;
+                font-size: 18px;
             }
             
-            .upload-text {
-                font-size: 16px;
-            }
-            
-            .upload-hint {
-                font-size: 13px;
-                margin-bottom: 24px;
-            }
-            
-            .upload-btn {
-                padding: 12px 24px;
-                font-size: 14px;
-            }
-            
-            /* 更紧凑的文件项 */
             .file-item {
-                padding: 10px 12px;
-                gap: 8px;
+                padding: 10px;
             }
             
             .file-icon {
-                width: 28px;
-                height: 28px;
+                width: 32px;
+                height: 32px;
                 font-size: 12px;
             }
             
@@ -567,26 +556,6 @@
             
             .file-size {
                 font-size: 10px;
-            }
-            
-            .file-status {
-                padding: 3px 6px;
-                font-size: 9px;
-            }
-            
-            /* 结果项优化 */
-            .result-item {
-                padding: 10px 12px;
-            }
-            
-            .result-url {
-                padding: 8px 10px;
-                font-size: 11px;
-            }
-            
-            .copy-btn {
-                padding: 8px;
-                font-size: 12px;
             }
         }
     </style>
@@ -613,11 +582,19 @@
             </div>
         </div>
         
+        <div class="control-panel" id="controlPanel">
+            <div class="control-info">
+                <span id="failedCount">0</span> 个文件上传失败
+            </div>
+            <button class="retry-all-btn" id="retryAllBtn" onclick="window.retryAllFailed()">重试所有失败文件</button>
+        </div>
+        
         <div class="file-list hidden" id="fileListContainer">
             <div class="file-list-header">
                 <div class="file-list-title">文件列表</div>
+                <div class="file-count" id="fileCount">0 个文件</div>
             </div>
-            <div id="fileList"></div>
+            <div class="file-grid" id="fileList"></div>
         </div>
         
         <div class="progress-section hidden" id="progressSection">
@@ -684,6 +661,7 @@
                 
                 this.files = [...this.files, ...newFiles];
                 this.renderFileList();
+                this.updateControlPanel();
                 
                 if (this.files.length > 0) {
                     this.startUpload();
@@ -693,6 +671,7 @@
             renderFileList() {
                 const fileListContainer = document.getElementById('fileListContainer');
                 const fileList = document.getElementById('fileList');
+                const fileCount = document.getElementById('fileCount');
                 
                 if (this.files.length === 0) {
                     fileListContainer.classList.add('hidden');
@@ -700,6 +679,7 @@
                 }
                 
                 fileListContainer.classList.remove('hidden');
+                fileCount.textContent = `${this.files.length} 个文件`;
                 fileList.innerHTML = '';
                 
                 this.files.forEach((fileItem, index) => {
@@ -711,14 +691,14 @@
                     if (fileItem.status === 'error') {
                         actionsHtml = `
                             <div class="file-actions">
-                                <button class="retry-btn" onclick="window.retryUpload(${index})">重试</button>
-                                <button class="remove-btn" onclick="window.removeFile(${index})">移除</button>
+                                <button class="action-btn retry" onclick="window.retryUpload(${index})">重试</button>
+                                <button class="action-btn remove" onclick="window.removeFile(${index})">移除</button>
                             </div>
                         `;
                     } else if (fileItem.status === 'waiting' || fileItem.status === 'uploading') {
                         actionsHtml = `
                             <div class="file-actions">
-                                <button class="remove-btn" onclick="window.removeFile(${index})">取消</button>
+                                <button class="action-btn remove" onclick="window.removeFile(${index})">取消</button>
                             </div>
                         `;
                     } else {
@@ -732,14 +712,76 @@
                     div.innerHTML = `
                         <div class="file-icon">${this.getFileIcon(fileItem.file.type)}</div>
                         <div class="file-info">
-                            <div class="file-name">${fileItem.file.name}</div>
+                            <div class="file-name" title="${fileItem.file.name}">${fileItem.file.name}</div>
                             <div class="file-size">${this.formatFileSize(fileItem.file.size)}</div>
-                            ${fileItem.error ? `<div style="color: #dc3545; font-size: 11px; margin-top: 2px;">${fileItem.error}</div>` : ''}
+                            ${fileItem.error ? `<div class="file-error">${fileItem.error}</div>` : ''}
                         </div>
                         ${actionsHtml}
                     `;
                     fileList.appendChild(div);
                 });
+            }
+            
+            updateControlPanel() {
+                const controlPanel = document.getElementById('controlPanel');
+                const failedCount = document.getElementById('failedCount');
+                const retryAllBtn = document.getElementById('retryAllBtn');
+                
+                const failedFiles = this.files.filter(f => f.status === 'error');
+                
+                if (failedFiles.length > 0) {
+                    controlPanel.classList.add('show');
+                    failedCount.textContent = failedFiles.length;
+                    retryAllBtn.disabled = false;
+                } else {
+                    controlPanel.classList.remove('show');
+                }
+            }
+            
+            retryFile(index) {
+                if (index >= 0 && index < this.files.length) {
+                    const fileItem = this.files[index];
+                    fileItem.status = 'waiting';
+                    fileItem.error = null;
+                    fileItem.url = null;
+                    
+                    this.renderFileList();
+                    this.updateControlPanel();
+                    this.startUpload();
+                }
+            }
+            
+            removeFile(index) {
+                if (index >= 0 && index < this.files.length) {
+                    const fileItem = this.files[index];
+                    
+                    // 如果文件正在上传，询问确认
+                    if (fileItem.status === 'uploading') {
+                        if (!confirm('文件正在上传中，确定要取消吗？')) {
+                            return;
+                        }
+                    }
+                    
+                    this.files.splice(index, 1);
+                    this.renderFileList();
+                    this.updateControlPanel();
+                    this.renderResults();
+                    this.renderSummary();
+                }
+            }
+            
+            retryAllFailed() {
+                const failedFiles = this.files.filter(f => f.status === 'error');
+                
+                failedFiles.forEach(fileItem => {
+                    fileItem.status = 'waiting';
+                    fileItem.error = null;
+                    fileItem.url = null;
+                });
+                
+                this.renderFileList();
+                this.updateControlPanel();
+                this.startUpload();
             }
             
             getFileIcon(type) {
@@ -831,6 +873,7 @@
                 }
                 
                 this.renderFileList();
+                this.updateControlPanel();
                 this.renderResults();
                 this.renderSummary();
                 document.getElementById('progressSection').classList.add('hidden');
@@ -865,6 +908,11 @@
                 const successCount = this.files.filter(f => f.status === 'success').length;
                 const errorCount = this.files.filter(f => f.status === 'error').length;
                 const totalCount = this.files.length;
+                
+                if (totalCount === 0) {
+                    summary.classList.add('hidden');
+                    return;
+                }
                 
                 summary.classList.remove('hidden');
                 summary.innerHTML = `
@@ -969,10 +1017,8 @@
         // 初始化上传器
         const uploader = new MultiFileUploader();
         
-        // 全局复制函数
-        window.copyToClipboard = (text) => uploader.copyToClipboard(text);
-        
         // 全局函数
+        window.copyToClipboard = (text) => uploader.copyToClipboard(text);
         window.retryUpload = (index) => uploader.retryFile(index);
         window.removeFile = (index) => uploader.removeFile(index);
         window.retryAllFailed = () => uploader.retryAllFailed();
