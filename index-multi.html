@@ -13,58 +13,110 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #fafafa;
             min-height: 100vh;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: space-between;
         }
         
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+        
+        .main {
             max-width: 800px;
-            width: 100%;
+            margin: 48px auto;
+            padding: 0 24px;
         }
         
-        .title {
+        .upload-section {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 48px;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
+            margin-bottom: 32px;
+            transition: all 0.2s ease;
+        }
+        
+        .upload-section:hover {
+            border-color: #1a1a1a;
+        }
+        
+        .upload-title {
+            font-size: 32px;
             font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+        
+        .upload-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
         }
         
         .upload-area {
-            border: 2px dashed #ddd;
+            border: 2px dashed #d1d1d1;
             border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
+            padding: 64px 32px;
+            transition: all 0.2s ease;
             cursor: pointer;
-            margin-bottom: 20px;
+            background: #fafafa;
         }
         
         .upload-area:hover,
         .upload-area.dragover {
-            border-color: #667eea;
-            background-color: #f8f9ff;
+            border-color: #1a1a1a;
+            background: #f5f5f5;
         }
         
         .upload-icon {
-            font-size: 48px;
-            color: #ddd;
-            margin-bottom: 16px;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
         }
         
         .upload-text {
+            font-size: 18px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
             color: #666;
-            font-size: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 32px;
         }
         
         .file-input {
@@ -72,44 +124,83 @@
         }
         
         .upload-btn {
-            background: #667eea;
+            background: #1a1a1a;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 16px 32px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
         
         .upload-btn:hover {
-            background: #5a6fd8;
+            background: #333;
+            transform: translateY(-1px);
         }
         
         .file-list {
-            margin-top: 20px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+        
+        .file-list.hidden {
+            display: none;
+        }
+        
+        .file-list-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            background: #fafafa;
+        }
+        
+        .file-list-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
         }
         
         .file-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            background: #f9f9f9;
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s ease;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-item:hover {
+            background: #fafafa;
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 16px;
         }
         
         .file-info {
-            display: flex;
-            align-items: center;
             flex: 1;
         }
         
         .file-name {
             font-weight: 500;
-            margin-right: 12px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+            font-size: 14px;
         }
         
         .file-size {
@@ -118,118 +209,236 @@
         }
         
         .file-status {
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .status-waiting {
-            background: #fff3cd;
-            color: #856404;
+            background: #f0f0f0;
+            color: #666;
         }
         
         .status-uploading {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #1a1a1a;
+            color: white;
         }
         
         .status-success {
-            background: #d4edda;
-            color: #155724;
+            background: #1a1a1a;
+            color: white;
         }
         
         .status-error {
-            background: #f8d7da;
-            color: #721c24;
+            background: #ff4444;
+            color: white;
+        }
+        
+        .progress-section {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .progress-section.hidden {
+            display: none;
+        }
+        
+        .progress-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
         }
         
         .progress-bar {
             width: 100%;
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            margin-top: 8px;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: #667eea;
+            background: #1a1a1a;
             transition: width 0.3s ease;
+            border-radius: 4px;
         }
         
         .results {
-            margin-top: 20px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .results.hidden {
+            display: none;
+        }
+        
+        .results-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            background: #fafafa;
+        }
+        
+        .results-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
         }
         
         .result-item {
             display: flex;
             align-items: center;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 8px;
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
         }
         
         .result-url {
             flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 8px;
-            font-size: 12px;
+            padding: 12px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            margin-right: 12px;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #fafafa;
+            color: #1a1a1a;
         }
         
         .copy-btn {
-            background: #28a745;
+            background: #1a1a1a;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
         
         .copy-btn:hover {
-            background: #218838;
+            background: #333;
+            transform: translateY(-1px);
         }
         
         .summary {
-            margin-top: 20px;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 6px;
+            background: #1a1a1a;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
             text-align: center;
+            margin-top: 32px;
+        }
+        
+        .summary.hidden {
+            display: none;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .summary-stats {
+            font-size: 14px;
+            opacity: 0.8;
         }
         
         .hidden {
             display: none;
         }
+        
+        @media (max-width: 768px) {
+            .header-content,
+            .main {
+                padding: 0 16px;
+            }
+            
+            .upload-section {
+                padding: 32px 24px;
+            }
+            
+            .upload-area {
+                padding: 48px 24px;
+            }
+            
+            .upload-title {
+                font-size: 24px;
+            }
+            
+            .file-item,
+            .result-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            
+            .result-url {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">Telegraph-Image 多文件上传</h1>
-        
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📁</div>
-            <div class="upload-text">拖拽文件到这里或点击选择文件</div>
-            <div class="upload-text">支持图片、视频、音频等多种格式</div>
-            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
-            <input type="file" id="fileInput" class="file-input" multiple accept="image/*,video/*,audio/*">
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Telegraph-Image</a>
+            <div style="font-size: 14px; color: #666;">多文件上传</div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="upload-section">
+            <h1 class="upload-title">上传文件</h1>
+            <p class="upload-subtitle">支持图片、视频、音频等多种格式，最多100个文件</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">拖拽文件到这里</div>
+                <div class="upload-hint">或者点击下方按钮选择文件</div>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+                <input type="file" id="fileInput" class="file-input" multiple accept="image/*,video/*,audio/*">
+            </div>
         </div>
         
-        <div class="file-list" id="fileList"></div>
-        
-        <div class="progress-bar hidden" id="progressBar">
-            <div class="progress-fill" id="progressFill"></div>
+        <div class="file-list hidden" id="fileListContainer">
+            <div class="file-list-header">
+                <div class="file-list-title">文件列表</div>
+            </div>
+            <div id="fileList"></div>
         </div>
         
-        <div class="results hidden" id="results"></div>
+        <div class="progress-section hidden" id="progressSection">
+            <div class="progress-title">上传进度</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="results hidden" id="results">
+            <div class="results-header">
+                <div class="results-title">上传结果</div>
+            </div>
+            <div id="resultsList"></div>
+        </div>
         
         <div class="summary hidden" id="summary"></div>
-    </div>
+    </main>
 
     <script>
         class MultiFileUploader {
@@ -285,13 +494,22 @@
             }
             
             renderFileList() {
+                const fileListContainer = document.getElementById('fileListContainer');
                 const fileList = document.getElementById('fileList');
+                
+                if (this.files.length === 0) {
+                    fileListContainer.classList.add('hidden');
+                    return;
+                }
+                
+                fileListContainer.classList.remove('hidden');
                 fileList.innerHTML = '';
                 
                 this.files.forEach(fileItem => {
                     const div = document.createElement('div');
                     div.className = 'file-item';
                     div.innerHTML = `
+                        <div class="file-icon">${this.getFileIcon(fileItem.file.type)}</div>
                         <div class="file-info">
                             <div class="file-name">${fileItem.file.name}</div>
                             <div class="file-size">${this.formatFileSize(fileItem.file.size)}</div>
@@ -304,6 +522,13 @@
                 });
             }
             
+            getFileIcon(type) {
+                if (type.startsWith('image/')) return '🖼️';
+                if (type.startsWith('video/')) return '🎥';
+                if (type.startsWith('audio/')) return '🎵';
+                return '📄';
+            }
+            
             formatFileSize(bytes) {
                 if (bytes === 0) return '0 Bytes';
                 const k = 1024;
@@ -314,10 +539,10 @@
             
             getStatusText(status) {
                 const statusMap = {
-                    waiting: '等待上传',
-                    uploading: '上传中...',
-                    success: '上传成功',
-                    error: '上传失败'
+                    waiting: '等待',
+                    uploading: '上传中',
+                    success: '成功',
+                    error: '失败'
                 };
                 return statusMap[status] || status;
             }
@@ -329,7 +554,7 @@
                 this.totalCount = waitingFiles.length;
                 this.uploadedCount = 0;
                 
-                document.getElementById('progressBar').classList.remove('hidden');
+                document.getElementById('progressSection').classList.remove('hidden');
                 
                 // 标记所有文件为上传中
                 waitingFiles.forEach(fileItem => {
@@ -388,11 +613,12 @@
                 this.renderFileList();
                 this.renderResults();
                 this.renderSummary();
-                document.getElementById('progressBar').classList.add('hidden');
+                document.getElementById('progressSection').classList.add('hidden');
             }
             
             renderResults() {
                 const results = document.getElementById('results');
+                const resultsList = document.getElementById('resultsList');
                 const successFiles = this.files.filter(f => f.status === 'success' && f.url);
                 
                 if (successFiles.length === 0) {
@@ -401,16 +627,16 @@
                 }
                 
                 results.classList.remove('hidden');
-                results.innerHTML = '<h3>上传成功的文件链接：</h3>';
+                resultsList.innerHTML = '';
                 
                 successFiles.forEach(fileItem => {
                     const div = document.createElement('div');
                     div.className = 'result-item';
                     div.innerHTML = `
                         <input type="text" class="result-url" value="${fileItem.url}" readonly>
-                        <button class="copy-btn" onclick="this.copyToClipboard('${fileItem.url}')">复制</button>
+                        <button class="copy-btn" onclick="window.copyToClipboard('${fileItem.url}')">复制链接</button>
                     `;
-                    results.appendChild(div);
+                    resultsList.appendChild(div);
                 });
             }
             
@@ -422,16 +648,25 @@
                 
                 summary.classList.remove('hidden');
                 summary.innerHTML = `
-                    <strong>上传完成</strong><br>
-                    总文件数: ${totalCount} | 成功: ${successCount} | 失败: ${errorCount}
+                    <div class="summary-title">上传完成</div>
+                    <div class="summary-stats">总计 ${totalCount} 个文件 • 成功 ${successCount} 个 • 失败 ${errorCount} 个</div>
                 `;
             }
             
             copyToClipboard(text) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert('链接已复制到剪贴板');
+                    // 简单的成功提示
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = '已复制';
+                    btn.style.background = '#333';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '#1a1a1a';
+                    }, 1500);
                 }).catch(err => {
                     console.error('复制失败:', err);
+                    alert('复制失败，请手动复制');
                 });
             }
         }
