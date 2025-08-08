@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
         }
 
         // 限制单次上传文件数量（可根据需要调整）
-        const MAX_FILES = 10;
+        const MAX_FILES = 100;
         if (uploadFiles.length > MAX_FILES) {
             throw new Error(`Too many files. Maximum ${MAX_FILES} files allowed.`);
         }
