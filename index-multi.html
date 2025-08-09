@@ -592,7 +592,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">Telegraph-Image</a>
+            <a href="/" class="logo" ondblclick="goToAdmin()" style="cursor: pointer; user-select: none;">Telegraph-Image</a>
             <div style="font-size: 14px; color: #666;">多文件上传</div>
         </div>
     </header>
@@ -639,6 +639,10 @@
     </main>
 
     <script>
+        function goToAdmin() {
+            window.location.href = '/admin.html';
+        }
+        
         class MultiFileUploader {
             constructor() {
                 this.files = [];

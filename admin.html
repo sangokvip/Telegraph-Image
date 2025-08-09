@@ -248,11 +248,9 @@
           console.log(result);
           if (result == "true") {
             this.showLogoutButton = true;
-          } else if (result == "Not using basic auth.") {
-
-          }
-          else {
-            window.location.href = "./api/manage/login";
+          } else {
+            // 未认证，重定向到登录页面
+            window.location.href = "./login.html";
           }
         })
         .catch(error => { alert("An error occurred while synchronizing data with the server, please check the network connection"); console.log('error', error) });

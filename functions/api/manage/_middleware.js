@@ -68,27 +68,47 @@ async function errorHandling(context) {
   
   
   function authentication(context) {
-    //context.env.BASIC_USER="admin"
-    //context.env.BASIC_PASS="admin"
-    //check if the env variables Disable_Dashboard are set
-    if (typeof context.env.img_url == "undefined" || context.env.img_url == null || context.env.img_url == "") {
+    const { request, env } = context;
+    const url = new URL(request.url);
+    
+    // 检查是否禁用了仪表板
+    if (typeof env.img_url == "undefined" || env.img_url == null || env.img_url == "") {
         return new Response('Dashboard is disabled. Please bind a KV namespace to use this feature.', { status: 200 });
     }
 
-    console.log(context.env.BASIC_USER)
-    if(typeof context.env.BASIC_USER == "undefined" || context.env.BASIC_USER == null || context.env.BASIC_USER == ""){
+    // 跳过认证和登录相关的端点
+    const skipAuth = ['/api/manage/auth', '/api/manage/login'].some(path => 
+        url.pathname.endsWith(path)
+    );
+    
+    if (skipAuth) {
         return context.next();
+    }
+    
+    // 检查cookie认证
+    const cookies = request.headers.get('Cookie') || '';
+    const isAuthenticated = cookies.includes('admin_auth=authenticated');
+    
+    if (isAuthenticated) {
+        return context.next();
+    }
+    
+    // 如果没有cookie认证，检查是否配置了基础认证
+    console.log(env.BASIC_USER)
+    if(typeof env.BASIC_USER == "undefined" || env.BASIC_USER == null || env.BASIC_USER == ""){
+        // 没有配置基础认证，需要cookie认证
+        return UnauthorizedException('Authentication required.');
     }else{
-        if (context.request.headers.has('Authorization')) {
+        // 配置了基础认证，使用原有的基础认证逻辑
+        if (request.headers.has('Authorization')) {
             // Throws exception when authorization fails.
-            const { user, pass } = basicAuthentication(context.request);
+            const { user, pass } = basicAuthentication(request);
             
-                          
-                if (context.env.BASIC_USER !== user || context.env.BASIC_PASS !== pass) {
-                    return UnauthorizedException('Invalid credentials.');
-                }else{
-                    return context.next();
-                }
+            if (env.BASIC_USER !== user || env.BASIC_PASS !== pass) {
+                return UnauthorizedException('Invalid credentials.');
+            }else{
+                return context.next();
+            }
             
         } else {
             return new Response('You need to login.', {

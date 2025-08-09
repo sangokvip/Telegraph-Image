@@ -1,17 +1,18 @@
 export async function onRequest(context) {
-    // Contents of context object
-    const {
-      request, // same as existing Worker API
-      env, // same as existing Worker API
-      params, // if filename includes [id] or [[path]]
-      waitUntil, // same as ctx.waitUntil in existing Worker API
-      next, // used for middleware or to fetch assets
-      data, // arbitrary space for passing data between middlewares
-    } = context;
-    if(typeof context.env.BASIC_USER == "undefined" || context.env.BASIC_USER == null || context.env.BASIC_USER == ""){
-        return new Response('Not using basic auth.', { status: 200 });
-    }else{
+    const { request, env } = context;
+    
+    // 检查cookie认证
+    const cookies = request.headers.get('Cookie') || '';
+    const isAuthenticated = cookies.includes('admin_auth=authenticated');
+    
+    if (isAuthenticated) {
         return new Response('true', { status: 200 });
     }
-
-  }
+    
+    // 如果没有cookie认证，检查是否配置了基础认证
+    if (typeof env.BASIC_USER == "undefined" || env.BASIC_USER == null || env.BASIC_USER == "") {
+        return new Response('false', { status: 401 });
+    } else {
+        return new Response('true', { status: 200 });
+    }
+}
